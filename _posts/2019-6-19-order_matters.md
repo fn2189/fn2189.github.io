@@ -50,6 +50,10 @@ After concatenating representaion fo all the set in the batch and reordering the
 
 ### Process block
 
-The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without input combined with a Dot attention mechanism. Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. The output q_t is used as a query for an a dot attention mechanism [(see more details on attention mechanism here)] to compute a relevance score e_i for each of the memories, which are the encoded inputs. Those relevance scores are then normalized through softmax to sum to 1. The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
+The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without input combined with a Dot attention mechanism. 
+
+![An Attention Mechanism. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/attention_mechanism.png "An attention Mechanism")
+
+Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. The output q_t is used as a query for an a dot attention mechanism [(see more details on attention mechanism here)] to compute a relevance score e_i for each of the memories, which are the encoded inputs. Those relevance scores are then normalized through softmax to sum to 1. The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
 
 
