@@ -17,3 +17,11 @@ With this improvements, neural machine translation tasks have reached human-leve
 Making the encoder invariant to the order in which the input is represented is the focus of the order matters architecture (The paper actually also tackle the case where the output data is a set but that is not relevant for the sorting problem). In order to do so, the network is made of three blocks: a Read, Process and Write block. This architecture can then be tweaked to solve an array of sorting problem. In particular, I applied it for digits reordering, words reordering, an video reconstruction.
 
 ![The order Matters network architechture. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/set_to_sequence.png "order matters network")
+
+
+## Architecture
+
+### Read block
+
+The first block of the order matters network is the Read block. It's purpose is to independently encode each input to fixed-size vector representation. For the digits reordering problem, the input raw form can be seen as a 1-dimension vector. A suitable Read block is then an element-wise perceptron, to map the input to a higher dimension space, a special case of which could be simply the identity function. For the word reordering problem, using a character-level representation of the words as a sequence of #{vocab}-dimensional one-hot vector,  we use a LSTM cell to to encode each word.
+
