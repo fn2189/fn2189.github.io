@@ -54,6 +54,50 @@ The next block in the network is process block. It is where the encodings of the
 
 ![An Attention Mechanism. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/attention%20mechanism.png "An attention Mechanism")
 
-Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. The output q_t is used as a query for an a dot attention mechanism [(see more details on attention mechanism here)] to compute a relevance score e_i for each of the memories, which are the encoded inputs. Those relevance scores are then normalized through softmax to sum to 1. The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
+Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. 
+
+```python
+class Process(nn.Module):
+    """..."""
+    def __init__(self, input_dim, hidden_dim, lstm_steps, batch_size):
+        """..."""
+    def forward(self, M, mask=None, dropout=None):
+        """..."""
+        #To account for the last batch that might not have the same length as the rest
+        batch_size = M.size(0)
+        i0 = self.i0.unsqueeze(0).expand(batch_size, -1)
+        h_0 = self.h_0.unsqueeze(0).expand(batch_size, -1)
+        c_0 = self.c_0.unsqueeze(0).expand(batch_size, -1)
+        
+        for _ in range(self.lstm_steps):
+            if _ == 0:
+                h_t_1 = h_0
+                c_t_1 = c_0
+                r_t_1 = i0
+            h_t, c_t = self.lstmcell(r_t_1, (h_t_1, c_t_1))
+```
+
+The output q_t is used as a query for an a dot attention mechanism [(see more details on attention mechanism here)] to compute a relevance score e_i for each of the memories M, which are the encoded inputs. 
+
+
+```python
+        scores = torch.matmul(M.transpose(-2, -1), c_t.unsqueeze(2)) \
+                         / math.sqrt(d_k)
+```
+Those relevance scores are then normalized through softmax to sum to 1. 
+
+```python
+        p_attn = F.softmax(scores, dim = -1)
+```
+
+The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
+```python
+        r_t_1 = torch.matmul(M, p_attn).squeeze(-1)
+            #print(f'r_t_1: {r_t_1.size()}')
+            h_t_1 = h_t
+            c_t_1 = c_t
+```
+
+### Write Block
 
 
