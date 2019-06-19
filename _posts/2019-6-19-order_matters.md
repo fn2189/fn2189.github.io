@@ -23,7 +23,7 @@ Making the encoder invariant to the order in which the input is represented is t
 
 ### Read block
 
-The first block of the order matters network is the Read block. It's purpose is to independently encode each input to fixed-size vector representation. For the digits reordering problem, the input raw form can be seen as a 1-dimension vector. A suitable Read block is then an element-wise perceptron, to map the input to a higher dimension space, a special case of which could be simply the identity function. For the word reordering problem, using a character-level representation of the words as a sequence of #{vocab}-dimensional one-hot vector,  we use a LSTM cell to to encode each word.
+The first block of the order matters network is the Read block. It's purpose is to independently encode each input to fixed-size vector representation. For the digits reordering problem, the input raw form can be seen as a 1-dimension vector. A suitable Read block is then an element-wise perceptron, to map the input to a higher dimension space, a special case of which could be simply the identity function. For the word reordering problem, using a character-level representation of the words as a sequence of #{vocab}-dimensional one-hot vector,  we use a LSTM cell 
 
 ```python
 class ReadWordEncoder(nn.Module):
@@ -32,8 +32,13 @@ class ReadWordEncoder(nn.Module):
         self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_dim, num_layers=1, batch_first=True)
 ```
 
+to to encode each word. With x of shape (batch_size, n_set, max_word_length, vocab_size), for each set in the batch, we treat x(i,:,:,:) as an input of batch_size n_set to the aforementionned LSTM . We use the last hidden_state of shape (n_set, hidden_dim) as the representation the set
+
 ```python
     def forward(self, x):
+        """
+        x: shape (batch_size, n_set, max_word_length, vocab_size)
+        """
         l = []
         for i in range(x.size(0)):
             outputs, (h_n, c_n) =  self.lstm(x[i, :, :, :])
@@ -41,6 +46,7 @@ class ReadWordEncoder(nn.Module):
         res = torch.cat(l, dim=0).permute(0,2,1) #shape (batch_size, hidden_dim, n_set)
         return res
 ```
+After concatenating representaion fo all the set in the batch and reordering the dimension, we get an output of shape (batch_size, hidden_dim, n_set)
 
 ### Process block
 
