@@ -100,4 +100,32 @@ The resulting coefficient then used as the weights to compute the weighted sum o
 
 ### Write Block
 
+The last block is the write block, in charge of outputting a sequence representing the correct order of the element in the cell.
 
+This idea is similar to the decoder part of a sequence to sequence architecture except that instead of outputting a element from a vocabulary at each step, an element of the input set is outputted, or better so, pointed to. To achieve that, like for the process block, an LSTM with dot attention over the input memories is used but instead of using the normalized relevance coefficients in a weighted sum, there are used as probability and the most likely element is outputted at each step. 
+```python
+    # Recurrence loop
+    for _ in range(input_length):
+        h_t, c_t, outs = step(decoder_input, hidden)
+        hidden = (h_t, c_t)
+        # Masking selected inputs
+        masked_outs = outs * mask
+
+        # Get maximum probabilities and indices
+        max_probs, indices = masked_outs.max(1)
+        one_hot_pointers = (runner == indices.unsqueeze(1).expand(-1, outs.size()[1])).float()
+
+        # Update mask to ignore seen indices
+        mask  = mask * (1 - one_hot_pointers)
+
+```
+
+In order to avoid the network repeating itself by outputting the same element multiple time, elements are masked out once they are outputted once. 
+```python
+        # Update mask to ignore seen indices
+        mask  = mask * (1 - one_hot_pointers)
+```
+
+This decoder architecture is fittingly called a pointer network.
+
+![Pointer Network ](https://raw.github.com/fn2189/fn2189.github.io/master/images/pointer%20networks.png "Pointer Network")
