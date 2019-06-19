@@ -6,14 +6,13 @@ title: Learning sorting functions on set: Order Matters
 ## Intro 1 (Abstract ?)
 
 
-Since the rediscovery of automatic differentiation and its application to backpropagation in the 80s, machine learning and neural networks in particular have seen a huge resurgence. Various discoveries such as CNN or RNN and achievement such as the creation of the imageNet Dataset have made neural network relevant in a wide array of tasks. For example, in tasks such as image classification or in some settings of text-comprehension, neural network based algorithms have been shown to outperform humans. However, the scope of the type of problems for which neural networks are competitive is still relatively narrow and their performance can be underwhelming for problems for which we have otherwise found pretty efficient algorithms. Sorting problem are such problems. Although insertion sort for example gives us an algorithm to sort a list of integers in reasonable time,this type of problem are not trivially fit in one of the family of problems that neural networks have been show to work well (specifically classification or regression) and it is therefore not obvious how to try to solve them. Fortunately, building on tried and true recent ideas such as attention mechanism and pointer networks, the order matters network architecture came to the rescue. Coming up with a neural network architecture that can solve sorting problems has some interesting implications: current state of the art sorting algorithm require to know the order rule in place to be implemented. Conversely, because neural networks work by just learning a map between input and output pairs, that would not be required. As we will see, there are some interesting problems that can be reformulated as sorting problems for which the inherent order rule is seems extremely hard to grasp. 
+Since the rediscovery of automatic differentiation and its application to backpropagation in the 80s, machine learning and neural networks in particular have seen a huge resurgence. Various discoveries such as CNN or RNN and achievements such as the creation of the imageNet Dataset have made neural network relevant in a wide array of tasks. For example, in tasks such as image classification or in some settings of text-comprehension, neural network based algorithms have been shown to outperform humans. However, the scope of the type of problems for which neural networks are competitive is still relatively narrow and their performance can be underwhelming for problems for which we have otherwise found pretty efficient algorithms. Sorting problem are such problems. Although insertion sort for example gives us an algorithm to sort a list of integers in reasonable time,this type of problem are not trivially fit in one of the family of problems that neural networks have been shown to work well on (specifically classification or regression) and it is therefore not obvious how to try to solve them. Fortunately, building on tried and true recent ideas such as attention mechanism and pointer networks, the order matters network architecture came to the rescue. Coming up with a neural network architecture that can solve sorting problems has some interesting implications: current state of the art sorting algorithm require to know the order rule on the space  elements are drawn from to be implemented. Conversely, because neural networks work by just learning a map between input and output pairs, that would not be required. As we will see, there are some interesting problems that can be reformulated as sorting problems for which the inherent order rule is seems extremely hard to grasp. 
 
 
 ## Intro 2
 
-When dealing with problems where the input and output data are sequential, as is the case for neural machine translation tasks for example, most state of the art model are based on the sequence to sequence architecture. The information in the input sequence is summarized through an encoder into a fixed-size vector that is then used to initialize a decoder that p
-predicts the output sequence. Both the encoder and the decoder use some kind of recurrent architecture to leverage the sequential nature of the input and output. Various extensions have been made to this basic architecture, most notably, the introduction of attention mechanisms that allows to prioritize the information from different steps of the input at each time step of the output and pointer networks, where the output at each step of the decoder comes from the input data and not from a fixed-size vocabulary.
-With this improvements, neural machine translation tasks have reached human-level performance. However, when dealing with sorting problem over sets, the input data is no longer sequential in that the output sequence must be independent of the order in which the set is represented. The output data is the sorted sequence of elements of the input. One can still pick an order and treat this sorting problem as a sequence to sequence. However, as outlined in [Order Matters paper title], some input orderings might lead to sub par performance. (It amounts to trying to model a joint probability through different conditioning orders of the variables in a non convex optimization setting. The minima found will likely be local each time, some resulting in better performance than others). 
+When dealing with problems where the input and output data are sequential, as is the case for neural machine translation tasks for example, most state of the art model are based on the sequence to sequence architecture. The information in the input sequence is summarized through an encoder into a fixed-size vector that is then used to initialize a decoder that predicts the output sequence. Both the encoder and the decoder use some kind of recurrent architecture to leverage the sequential nature of the input and output. Various extensions have been made to this basic architecture, most notably, the introduction of attention mechanisms that allows to prioritize the information from different steps of the input at each time step of the output and pointer networks, where the output at each step of the decoder comes from the input data and not from a fixed-size vocabulary.
+With this improvements, neural machine translation tasks have reached human-level performance. However, when dealing with sorting problem over sets, the input data is no longer sequential in that the output sequence must be independent of the order in which the set is represented. The output data is the sorted sequence of elements of the input. One could still pick a given order to represent the input sequences and treat this sorting problem as a sequence to sequence one . However, as outlined in [Order Matters paper title], some input orderings might lead to sub par performance. (It amounts to trying to model a joint probability through different conditioning orders of the variables in a non convex optimization setting. The minima found will likely be local each time, some resulting in better performance than others). 
 Making the encoder invariant to the order in which the input is represented is the focus of the order matters architecture (The paper actually also tackle the case where the output data is a set but that is not relevant for the sorting problem). In order to do so, the network is made of three blocks: a Read, Process and Write block. This architecture can then be tweaked to solve an array of sorting problem. In particular, I applied it for digits reordering, words reordering, an video reconstruction.
 
 ![The order Matters network architechture. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/set_to_sequence.png "order matters network")
@@ -32,7 +31,7 @@ class ReadWordEncoder(nn.Module):
         self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_dim, num_layers=1, batch_first=True)
 ```
 
-to to encode each word. With x of shape (batch_size, n_set, max_word_length, vocab_size), for each set in the batch, we treat x(i,:,:,:) as an input of batch_size n_set to the aforementionned LSTM . We use the last hidden_state of shape (n_set, hidden_dim) as the representation the set
+to to encode each word. With x of shape (batch_size, n_set, max_word_length, vocab_size), for each set in the batch, we treat x(i,:,:,:) as an 3-D input of batch_size n_set to the aforementionned LSTM . We use the last hidden_state of the LSTM, of shape (n_set, hidden_dim) as the representation the set
 
 ```python
     def forward(self, x):
@@ -46,11 +45,11 @@ to to encode each word. With x of shape (batch_size, n_set, max_word_length, voc
         res = torch.cat(l, dim=0).permute(0,2,1) #shape (batch_size, hidden_dim, n_set)
         return res
 ```
-After concatenating representaion fo all the set in the batch and reordering the dimension, we get an output of shape (batch_size, hidden_dim, n_set)
+After concatenating the representaions for all the sets in the batch and reordering the dimensions, we get an output of shape (batch_size, hidden_dim, n_set)
 
 ### Process block
 
-The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without input combined with a Dot attention mechanism. 
+The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without any input combined with a Dot attention mechanism. 
 
 ![An Attention Mechanism. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/attention%20mechanism.png "An attention Mechanism")
 
@@ -84,13 +83,13 @@ The output q_t is used as a query for an a dot attention mechanism [(see more de
         scores = torch.matmul(M.transpose(-2, -1), c_t.unsqueeze(2)) \
                          / math.sqrt(d_k)
 ```
-Those relevance scores are then normalized through softmax to sum to 1. 
+Those relevance scores are normalized through softmax to sum to 1. 
 
 ```python
         p_attn = F.softmax(scores, dim = -1)
 ```
 
-The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
+The resulting coefficients then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
 ```python
         r_t_1 = torch.matmul(M, p_attn).squeeze(-1)
             #print(f'r_t_1: {r_t_1.size()}')
@@ -102,7 +101,7 @@ The resulting coefficient then used as the weights to compute the weighted sum o
 
 The last block is the write block, in charge of outputting a sequence representing the correct order of the element in the cell.
 
-This idea is similar to the decoder part of a sequence to sequence architecture except that instead of outputting a element from a vocabulary at each step, an element of the input set is outputted, or better so, pointed to. To achieve that, like for the process block, an LSTM with dot attention over the input memories is used but instead of using the normalized relevance coefficients in a weighted sum, there are used as probability and the most likely element is outputted at each step. 
+This idea is similar to the decoder part of a sequence to sequence architecture except that instead of outputting a element from a vocabulary at each step, an element of the input set is outputted, or better so, pointed to. To achieve that, like for the process block, an LSTM with dot attention over the input memories is used but instead of using the normalized relevance coefficients in a weighted sum, they are used as probabilities and the most likely element is outputted at each step. 
 ```python
     # Recurrence loop
     for _ in range(input_length):
@@ -120,7 +119,7 @@ This idea is similar to the decoder part of a sequence to sequence architecture 
 
 ```
 
-In order to avoid the network repeating itself by outputting the same element multiple time, elements are masked out once they are outputted once. 
+In order to avoid the network repeating itself by outputting the same element multiple time, elements are masked out once they are outputted the first time. 
 ```python
         # Update mask to ignore seen indices
         mask  = mask * (1 - one_hot_pointers)
