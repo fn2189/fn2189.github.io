@@ -25,3 +25,25 @@ Making the encoder invariant to the order in which the input is represented is t
 
 The first block of the order matters network is the Read block. It's purpose is to independently encode each input to fixed-size vector representation. For the digits reordering problem, the input raw form can be seen as a 1-dimension vector. A suitable Read block is then an element-wise perceptron, to map the input to a higher dimension space, a special case of which could be simply the identity function. For the word reordering problem, using a character-level representation of the words as a sequence of #{vocab}-dimensional one-hot vector,  we use a LSTM cell to to encode each word.
 
+```python
+class ReadWordEncoder(nn.Module):
+    def __init__(self, hidden_dim, input_size=26):
+        super(ReadWordEncoder, self).__init__()
+        self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_dim, num_layers=1, batch_first=True)
+```
+
+```python
+    def forward(self, x):
+        l = []
+        for i in range(x.size(0)):
+            outputs, (h_n, c_n) =  self.lstm(x[i, :, :, :])
+            l.append(h_n)
+        res = torch.cat(l, dim=0).permute(0,2,1) #shape (batch_size, hidden_dim, n_set)
+        return res
+```
+
+### Process block
+
+The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without input combined with a Dot attention mechanism. Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. The output q_t is used as a query for an a dot attention mechanism [(see more details on attention mechanism here)] to compute a relevance score e_i for each of the memories, which are the encoded inputs. Those relevance scores are then normalized through softmax to sum to 1. The resulting coefficient then used as the weights to compute the weighted sum of the memories that serves as the new input to the LSTM r_t while q_t serves as the new hidden state.
+
+
