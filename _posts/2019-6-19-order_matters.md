@@ -128,3 +128,38 @@ In order to avoid the network repeating itself by outputting the same element mu
 This decoder architecture is fittingly called a pointer network.
 
 ![Pointer Network ](https://raw.github.com/fn2189/fn2189.github.io/master/images/pointer%20networks.png "Pointer Network")
+
+## Experiments
+
+As Mentionned previously, we tried to apply the order matters architecture to 3 difffent problems of (according to us) increasing complexity: digits, words and video reordering. This allowed us to see how the architecture performs in setting where the sorting problem is easily solved by humans because the underlying order is obvious (digits and words) and one that might have hard instances for humans because said underlying order in not trivial. Forthe digits and word reordering problems, we experimented with the set size to try to expose the limits of our implementation but we did not for video because the problem was hard enough to solve with a set size of 5.
+
+### Digits 
+
+#### Dataset
+The dataset for this problem can be generated , which allow us a lot of room for experimentation. We just pick a set size as well as train, val and test sizes and genrerates pair of X (n_set floats) and Y(lis of the indexes that would sort the set.
+
+#### Settings and parameters
+
+As mentionned previously, the read block is perceptron. We choose a single layer with a hidden dimension of 32 and a ReLu activation. This hidden dim is also used for the process and write block. We use Adam optimizer with a learning rate of 1e-4, a batch size of 256 and no dropout.
+
+#### Metric and Result
+The loss used is an element-wise cross-entropy loss but the accuracy is measured by a 1-0 loss (1 if the predicted and correct order are exactly equal and 0 otherwise. This is a rather conservative metric because it only rewards exact matches. On our validation set, we get a perfct accuracy.
+
+### Words
+
+#### Dataset
+The dataset for this problem can be either synthetic or with word coming from an or many existing dictionaries. Those 2 aproaces are sligthy different because the probability space of the words changes. We  opted for the most inteesting setting where te training data is generated from a uniform distribution ofthe word of between 5 and 26 letters from the english alphabet while the testing is done on words cming from the english dictionary. The dataset creation is otherwise similar to the digits reordering problem
+
+#### Settings and parameters
+
+As mentionned previously, the read block is perceptron. We choose a single layer with a hidden dimension of 32 and a ReLu activation. This hidden dim is also used for the process and write block. We use Adam optimizer with a learning rate of 1e-4, a batch size of 256 and no dropout.
+
+#### Metric and Result
+The loss used is an element-wise cross-entropy loss but the accuracy is measured by a 1-0 loss (1 if the predicted and correct order are exactly equal and 0 otherwise. This is a rather conservative metric because it only rewards exact matches. On our validation set, we get a perfct accuracy.
+
+
+
+
+
+
+
