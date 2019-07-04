@@ -173,7 +173,7 @@ The training loss and accuracy metric used are exactly the same as for the word 
 
 ## Next Steps
 
-
+For multiple tasks such as videos classification, optical flow features have been shown to improve performance. It seems reasonnable to assume that they can convey some meaningful informaion about how to sort the segments of a video so it would be interesting to include optical flow in the feature represntation of the videos segments to see if it helps solving the sorting problem.
 
 
 
