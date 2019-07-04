@@ -148,16 +148,30 @@ The loss used is an element-wise cross-entropy loss but the accuracy is measured
 ### Words
 
 #### Dataset
-The dataset for this problem can be either synthetic or with word coming from an or many existing dictionaries. Those 2 aproaces are sligthy different because the probability space of the words changes. We  opted for the most inteesting setting where te training data is generated from a uniform distribution ofthe word of between 5 and 26 letters from the english alphabet while the testing is done on words cming from the english dictionary. The dataset creation is otherwise similar to the digits reordering problem
+The dataset for this problem can be either synthetic or with word coming from an or many existing dictionaries. Those 2 aproaces are sligthy different because the probability space of the words changes. We  opted for the most inteesting setting where te training data is generated from a uniform distribution ofthe word of between 5 and 26 letters from the english alphabet while the testing is done on words coming from the english dictionary. Either way, a word is represented as a matrix of one-hot-encoded characters. The dataset creation is otherwise similar to the digits reordering problem
 
 #### Settings and parameters
 
-As mentionned previously, the read block is perceptron. We choose a single layer with a hidden dimension of 32 and a ReLu activation. This hidden dim is also used for the process and write block. We use Adam optimizer with a learning rate of 1e-4, a batch size of 256 and no dropout.
+As mentionned previously, the read block is a char-level RNN using an LSTM. The vocabulary is of size 26 (size of the english alphabet without any special character). The hiddendim of the LSTM is of size 32. This hidden dim is also used for the process and write block. We use Adam optimizer with a learning rate of 1e-4, a batch size of 256 and no dropout.
 
 #### Metric and Result
-The loss used is an element-wise cross-entropy loss but the accuracy is measured by a 1-0 loss (1 if the predicted and correct order are exactly equal and 0 otherwise. This is a rather conservative metric because it only rewards exact matches. On our validation set, we get a perfct accuracy.
+The training loss and accuracy metric used are exactly the same as for the word reordering problem. On our validation set, we get a perfct accuracy.
+
+### Videos
+
+#### Dataset
+There are a few things we had to consider when picking a dataset for this problem. Because most state-of-the-art feature computation algorithms for video leverages pretrained image classiffication neural nets to compute frame-level features (obtained for example for an earlier fully connected layer of a NN) that are then combined to get a feature representatioon of the whole video. That means that we need to pick a video dataset and a pretrained network. How close the concepts present in the videsos are the the one of the last layer of the pretrained NN might affect the quality of the feature representation. In thi case, we sed a pretrained mobilenet v2 as a feature extractor and a proprietary video dataset. To build the sets, we chop the videos in n_set segments that are randomly shuffled. The input X is then a matrix of feature representations for each of the segments in the set while Y is the list of indexes that would sort the set back to the original order of the video.
+
+#### Settings and parameters
+
+The read block is here again a single layerperceptron with a ReLu nonlinearity that map the feature space from the NN feature representation to a new feature space. We use a hidden dim of 512. This hidden dim is also used for the process and write block. We use Adam optimizer with a learning rate of 1e-4, a batch size of 256 and a dropout rate of .2, mainly in the read block.
+
+#### Metric and Result
+The training loss and accuracy metric used are exactly the same as for the word reordering problem. So far, on our validation set, we get an accuracy of about 0.09, which is definitely not great but already better that random. The accuracy on the training set in significantly higher, so the network is overfitting. We have not yet been able to successfully overcome this problemat the time of the writing.
 
 
+
+## Next Steps
 
 
 
