@@ -47,6 +47,9 @@ to to encode each word. With x of shape (batch_size, n_set, max_word_length, voc
 ```
 After concatenating the representaions for all the sets in the batch and reordering the dimensions, we get an output of shape (batch_size, hidden_dim, n_set)
 
+![Read Block ](https://raw.github.com/fn2189/fn2189.github.io/master/images/read_block.png "Read Block")
+*The Architecture of a read block*
+
 ### Process block
 
 The next block in the network is process block. It is where the encodings of the elements of the set are combined into a single, fixed-sized representation of the whole set. This is done using an LSTM cell without any input combined with a Dot attention mechanism. 
@@ -96,6 +99,9 @@ The resulting coefficients then used as the weights to compute the weighted sum 
             h_t_1 = h_t
             c_t_1 = c_t
 ```
+
+![Process Block ](https://raw.github.com/fn2189/fn2189.github.io/master/images/process_block.png "Process Block")
+*The Architecture of a process block*
 
 ### Write Block
 
