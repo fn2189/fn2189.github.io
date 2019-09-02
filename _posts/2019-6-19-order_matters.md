@@ -22,7 +22,14 @@ When dealing with problems where the input and output data are sequential, as is
 With these improvements, neural machine translation tasks have reached human-level performance. However, when dealing with sorting problem over sets, the input data is no longer sequential in that the output sequence must be independent of the order in which the set is represented. The output data is the sorted sequence of elements of the input. One could still pick a given order to represent the input sequences and treat this sorting problem as a sequence to sequence one . However, as outlined in [Order Matters paper title], some input orderings might lead to sub par performance. 
 
 ```diff
-- Add an annecdotal example of the kind fo sorting problem we have. Later, you will be doing number and word ordering, but at this point in the explanation, it would be useful to have a more difficult sorting problem. I with thinking putting dinner guests in the correct order at a dinner party. Like if there was a State dinner and the dignitaries of the world had to be put in the correct order when seated around the table. The guests are a 'set' of items and therre is a known 'best order' for their seatting arrangement, but the ordering function is quite difficult to describe. 
+- Add an annecdotal example of the kind fo sorting problem we have. Later, you will be doing number and word ordering, 
+but at this point in the explanation, it would be useful to have a more difficult sorting problem. 
+I with thinking putting dinner guests in the correct order at a dinner party. Like if there was a 
+State dinner and the dignitaries of the world had to be put in the correct order when 
+seated around the table. The guests are a 'set' of items and therre is a known 
+'best order' for their seatting arrangement, but the ordering function is quite difficult to describe. 
+
+- Then say that editting videos is also a 'sorting' problem of this contextual sorting type. That is why TRASH is interested in this problem.
 
 - This is a cool and complicated aside! I would definitely expand it for the CVPR paper version. 
 ```
