@@ -3,6 +3,7 @@ layout: post
 title: Learning sorting functions on set: Order Matters
 ---
 
+# Learning sorting functions on set: Order Matters
 
 ```diff
 - We should make the title more visible, check the markdown specifications for that. 
