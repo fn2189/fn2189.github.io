@@ -11,9 +11,17 @@ title: Order Matters, learning sorting functions on sets.
 
 Since the rediscovery of automatic differentiation and its application to backpropagation in the 80s, machine learning and neural networks in particular have seen a huge resurgence. In tasks such as image classification or in some settings of text-comprehension, neural network based algorithms have been shown to outperform humans. However, the scope of the type of problems for which neural networks are competitive is still relatively narrow and their performance can be underwhelming for problems for which we have otherwise found pretty efficient algorithms. Sorting problem are such problems. Although insertion sort for example gives us an algorithm to sort a list of integers in reasonable time, this type of problem are not trivially fit in one of the family of problems that neural networks have been shown to work well on (specifically classification or regression) and it is therefore not obvious how to try to solve them. Fortunately, building on recent ideas such as attention mechanisms and pointer networks, the Order Matters network architecture came to the rescue.
 
+
 ``` diff
 - Put a reference here for the Order Matters paper. I would also add a few sentences introducing the paper, who worked on it, what their group is generally interested in. You should save this intro as it is for the CVPR paper (copy it into your draft), but break up this paragraph into two paragraphs with a little more history on this area of work for the blog. 
 ```
+The [Order Matters](https://arxiv.org/pdf/1511.06391.pdf) paper was written by Oriol Vinyals, Samy Bengio and Manjunath Kudlur fromthe Google Brain Team. 
+
+```diff
+- [order matters related papers](https://ai.google/research/pubs/?area=MachineIntelligence)
+- These are the publications that appear under "Machine Intelligence", the research area tagged for the Order Matters paper on the google brain website. I am really not sure about how to summarize that in a way that is relevant for the blog
+```
+
 
 Coming up with a neural network architecture that can solve sorting problems has some interesting implications: current state of the art sorting algorithm require to know the order rule on the space elements are drawn from to be implemented. 
 ```diff
