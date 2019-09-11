@@ -23,7 +23,12 @@ The [Order Matters](https://arxiv.org/pdf/1511.06391.pdf) paper was written by O
 ```
 
 
-Coming up with a neural network architecture that can solve sorting problems has some interesting implications: current state of the art sorting algorithm require to know the order rule on the space elements are drawn from to be implemented. 
+Coming up with a neural network architecture that can solve sorting problems has some interesting implications: 
+```diff
+- current state of the art sorting algorithm require to know the order rule on the space elements are drawn from to be implemented. 
+
+Our usual way to perform sorting relies on ability to order pair of elements of a set. Hence, one cannot sort a set in which appears a pair of elements that one doesn't know ow to order. On the other hand, by learning using pair or unsorted set with the correct order as a label, a neural network would try to approximate the underlying oder function over all possible pairs, making it possible to perform soring without any prior knowledge of the order, only enough examples of sorted sets.
+``
 ```diff
 - That sentence is true, but hard to understand for novices. Try to break it down for a newbie
 ```
