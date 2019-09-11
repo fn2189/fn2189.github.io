@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Learning sorting functions on set: Order Matters
+title: Order Matters, learning sorting functions on sets.
 ---
 
 # Learning sorting functions on set: Order Matters
