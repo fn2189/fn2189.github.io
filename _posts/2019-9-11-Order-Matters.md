@@ -7,6 +7,8 @@ title: Order Matters, learning sorting functions on sets.
 
 ```diff
 - We should make the title more visible, check the markdown specifications for that. 
+
+I am not entirely sure what you mean by more visible but we can change the css for the title (h1) in the file https://github.com/fn2189/fn2189.github.io/blob/master/style.scss
 ```
 
 Since the rediscovery of automatic differentiation and its application to backpropagation in the 80s, machine learning and neural networks in particular have seen a huge resurgence. In tasks such as image classification or in some settings of text-comprehension, neural network based algorithms have been shown to outperform humans. However, the scope of the type of problems for which neural networks are competitive is still relatively narrow and their performance can be underwhelming for problems for which we have otherwise found pretty efficient algorithms. Sorting problem are such problems. Although insertion sort for example gives us an algorithm to sort a list of integers in reasonable time, this type of problem are not trivially fit in one of the family of problems that neural networks have been shown to work well on (specifically classification or regression) and it is therefore not obvious how to try to solve them. Fortunately, building on recent ideas such as attention mechanisms and pointer networks, the Order Matters network architecture came to the rescue.
