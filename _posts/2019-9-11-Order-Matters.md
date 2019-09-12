@@ -238,13 +238,25 @@ As mentionned previously, the read block is perceptron. We choose a single layer
 The loss used is an element-wise cross-entropy loss but the accuracy is measured by a 1-0 loss (1 if the predicted and correct order are exactly equal and 0 otherwise. This is a rather conservative metric because it only rewards exact matches. Below are some training results for different set sizes:
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/digits/D49C43F3_losses.svg)
-*N_set = 5*
+*Train/val losses N_set = 5*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/digits/D49C43F3/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 5*
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/digits/E896BB56_losses.svg)
-*N_set = 10*
+*Train/val losses N_set = 10*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/digits/E896BB56/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 10*
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/digits/B7C3E927_losses.svg)
-*N_set = 30*
+*Train/val losses N_set = 30*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/digits/B7C3E927/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 10*
+
+
+
 
 
 ### Words
@@ -263,13 +275,22 @@ As mentionned previously, the read block is a char-level RNN using an LSTM. The 
 The training loss and accuracy metric used are exactly the same as for the word reordering problem. Below are some training results for different set sizes:
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/words/2998C8C7_losses.svg)
-*N_set = 5*
+*Train/val losses N_set = 5*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/words/2998C8C7/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 5*
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/words/D76EC16E_losses.svg)
-*N_set = 10*
+*Train/val losses N_set = 10*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/words/D76EC16E/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 10*
 
 ![Train/val losses](https://github.com/fn2189/fn2189.github.io/blob/master/images/losses/words/E9153422_losses.svg)
-*N_set = 30*
+*Train/val losses N_set = 30*
+
+![Evolution of the test accuracy with the number of epochs](https://github.com/fn2189/set_to_sequence/blob/master/evals/words/E9153422/accuracy.svg)
+*Evolution of the test accuracy with the number of epochs N_set = 30*
 
 We can see that regardless of the set size, the training and val curves are in 2 parts. This is because the LSTM encoder for the words is trained from scratch and need to learn how to properly encode the words before the performance of the rest of the network can improve.
 
