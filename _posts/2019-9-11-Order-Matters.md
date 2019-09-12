@@ -27,12 +27,14 @@ Coming up with a neural network architecture that can solve sorting problems has
 ```diff
 - current state of the art sorting algorithm require to know the order rule on the space elements are drawn from to be implemented. 
 
-Our usual way to perform sorting relies on ability to order pair of elements of a set. Hence, one cannot sort a set in which appears a pair of elements that one doesn't know ow to order. On the other hand, by learning using pair or unsorted set with the correct order as a label, a neural network would try to approximate the underlying oder function over all possible pairs, making it possible to perform soring without any prior knowledge of the order, only enough examples of sorted sets.
+Our usual way to perform sorting relies on ability to order pair of elements of a set. Hence, one cannot sort a set in which appears a pair of elements that one doesn't know ow to order. 
+On the other hand, by learning using pair or unsorted set with the correct order as a label, a neural network would try to approximate the underlying oder function over all possible pairs, 
+making it possible to perform soring without any prior knowledge of the order, only enough examples of sorted sets.
 ``
 ```diff
 - That sentence is true, but hard to understand for novices. Try to break it down for a newbie
 ```
-Conversely, because neural networks work by just learning a map between input and output pairs, that would not be required. As we will see, there are some interesting problems that can be reformulated as sorting problems for which the inherent order rule is seems extremely hard to grasp. 
+Conversely, because neural networks work by just learning a map between input and output pairs, that would not be required. As we will see, there are some interesting problems that can be reformulated as sorting problems for which the inherent order rule is seems extremely hard to grasp or that don't even have one. 
 
 When dealing with problems where the input and output data are sequential, as is the case for neural machine translation tasks for example, most state of the art models are based on the sequence to sequence architecture. The information in the input sequence is summarized through an encoder into a fixed-size vector that is then used to initialize a decoder that predicts the output sequence. Both the encoder and the decoder use some kind of recurrent architecture to leverage the sequential nature of the input and output. Various extensions have been made to this basic architecture, most notably, the introduction of attention mechanisms that allows us to prioritize the information from different steps of the input at each time step of the output and pointer networks, where the output at each step of the decoder comes from the input data and not from a fixed-size vocabulary.
 With these improvements, neural machine translation tasks have reached human-level performance. However, when dealing with sorting problem over sets, the input data is no longer sequential in that the output sequence must be independent of the order in which the set is represented. The output data is the sorted sequence of elements of the input. One could still pick a given order to represent the input sequences and treat this sorting problem as a sequence to sequence one . However, as outlined in [Order Matters paper title], some input orderings might lead to sub par performance. 
@@ -45,19 +47,26 @@ State dinner and the dignitaries of the world had to be put in the correct order
 seated around the table. The guests are a 'set' of items and therre is a known 
 'best order' for their seatting arrangement, but the ordering function is quite difficult to describe. 
 
-- Then say that editting videos is also a 'sorting' problem of this contextual sorting type. That is why TRASH is interested in this problem.
+- Then say that editing videos is also a 'sorting' problem of this contextual sorting type. That is why TRASH is interested in this problem.
 
 - This is a cool and complicated aside! I would definitely expand it for the CVPR paper version. 
 ```
-(It amounts to trying to model a joint probability through different conditioning orders of the variables in a non convex optimization setting. The minima found will likely be local each time, some resulting in better performance than others). 
+
+```diff
+A canonical example that can be reformulated as a set ordering is the travelling salesman problem: given a set of points in a metric space, finding the shortest possible route that visits each city and returns to the origin city. The result is invariant by change of the starting point and conditionnally to picking one, the problem can be reframed as finding the sorting of the cities that minimizes the length of the total route. This is a problem for which an order between pairs of elements of a set does not even exist, only a global criteria over the output permutation. Thus, it cannot be solved by regular sorting algorithm but we can hope to find at least an approximate solver with the order matters architechture.
+
+```
+```diff
+-(It amounts to trying to model a joint probability through different conditioning orders of the variables in a non convex optimization setting. The minima found will likely be local each time, some resulting in better performance than others). 
 Making the encoder invariant to the order in which the input is represented is the focus of the order matters architecture
+```
 
 ```diff
 - I would mention this aside in the CVPR paper in the Related Work section, but it can be skipped in this blog
 ```
-(The paper actually also tackle the case where the output data is a set but that is not relevant for the sorting problem). In order to do so, the network is made of three blocks: a Read, Process and Write block. This architecture can then be tweaked to solve an array of sorting problem. In particular, I applied it for digits reordering and word reordering.
+(The paper actually also tackle the case where the output data is a set but that is not relevant for the sorting problem). In order to do so, the network is made of three blocks: a Read, Process and Write block. This architecture can then be tweaked to solve an array of sorting problem. In particular, I applied it for digits reordering and word reordering and video reconstruction.
 
-[//]: # (, an video reconstruction.)
+
 
 
 ## Architecture
