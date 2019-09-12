@@ -59,6 +59,8 @@ A canonical example that can be reformulated as a set ordering is the travelling
 ```diff
 -(It amounts to trying to model a joint probability through different conditioning orders of the variables in a non convex optimization setting. The minima found will likely be local each time, some resulting in better performance than others). 
 Making the encoder invariant to the order in which the input is represented is the focus of the order matters architecture
+
+I wasn't sure if the comment right uderneath applied to this paragraph or the one after
 ```
 
 ```diff
@@ -71,6 +73,7 @@ Making the encoder invariant to the order in which the input is represented is t
 
 ## Architecture
 ![The order Matters network architechture. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/set_to_sequence.png "order matters network")
+*The Read-Process-Write network architecture overview*
 ```diff
 - We need a caption here
 ```
