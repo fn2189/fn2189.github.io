@@ -84,6 +84,8 @@ The first block of the order matters network is the Read block. It's purpose is 
 
 ```diff
 - Can you make the width of the text wider? So the code below is more readable on a laptop/ desktop screen?
+
+Done
 ```
 
 ```python
@@ -125,6 +127,7 @@ The next block in the network is process block. It is where the encodings of the
 ```
 
 ![An Attention Mechanism. ](https://raw.github.com/fn2189/fn2189.github.io/master/images/attention%20mechanism.png "An attention Mechanism")
+*An attention mechanism. (from https://medium.com/syncedreview/a-brief-overview-of-attention-mechanism-13c578ba9129)*
 
 Specifically, at step 0, a LSTM step is run with the input is initialized to 0 and the states are initialized randomly. 
 
